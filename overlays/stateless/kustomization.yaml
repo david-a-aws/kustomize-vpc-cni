@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+namespace: kube-system
+
+  # This patch only targets the DaemonSet
+
+patches:
+- patch: |-
+    - op: replace
+      path: /metadata/name
+      value: aws-node-stateless
+    - op: replace
+      path: /spec/selector/matchLabels/k8s-app
+      value: aws-node-stateless
+    - op: replace
+      path: /spec/template/metadata/labels/k8s-app
+      value: aws-node-stateless
+  target:
+    kind: DaemonSet
+    name: aws-node
+- path: node-affinity.yaml
+- path: env-vars.yaml
+resources:
+- ../../base
